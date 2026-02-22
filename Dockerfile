@@ -4,18 +4,20 @@
 # ─────────────────────────────────────────
 FROM eclipse-temurin:25-jdk AS builder
 
+# Install Maven
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml first (better layer caching)
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
+# Copy pom.xml first (better layer caching)
+COPY pom.xml ./
 
 # Download dependencies (cached unless pom.xml changes)
-RUN ./mvnw dependency:go-offline -q
+RUN mvn dependency:go-offline -q
 
 # Copy source code and build the JAR
 COPY src/ src/
-RUN ./mvnw package -DskipTests -q
+RUN mvn package -DskipTests -q
 
 # ─────────────────────────────────────────
 # Stage 2 — Run

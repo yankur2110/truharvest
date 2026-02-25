@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker info:*)",
+      "Bash(cd /c/Users/NOJOOMAE/Documents/Workspaces/truharvest && docker build --platform linux/amd64 -t yankurdev/truharvest-backend:latest . 2>&1)",
+      "Bash(cd /c/Users/NOJOOMAE/Documents/Workspaces/truharvest && docker push yankurdev/truharvest-backend:latest 2>&1)"
+    ]
+  }
+}

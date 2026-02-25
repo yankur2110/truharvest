@@ -4,17 +4,11 @@
 # ─────────────────────────────────────────
 FROM eclipse-temurin:25-jdk AS builder
 
-# Install curl, then download Maven directly from Apache
-ARG MAVEN_VERSION=3.9.9
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates wget && \
-    wget -q https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
-    -O /tmp/maven.tar.gz --no-check-certificate && \
-    tar -xz -C /opt -f /tmp/maven.tar.gz && \
-    ln -s /opt/apache-maven-${MAVEN_VERSION} /opt/maven && \
-    rm /tmp/maven.tar.gz && \
+# Install Maven from apt — avoids unreliable external binary downloads.
+# Eclipse Temurin sets JAVA_HOME, so Maven will use Java 25 automatically.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends maven && \
     rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/opt/maven/bin:${PATH}"
 
 WORKDIR /app
 

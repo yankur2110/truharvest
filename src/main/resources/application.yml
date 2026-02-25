@@ -24,5 +24,6 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # Keycloak realm issuer — Spring will auto-fetch the JWKS from this URL
-          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+          # Direct JWKS endpoint — avoids issuer-URL mismatch between
+          # browser access (localhost:9090) and internal Docker (keycloak:8080)
+          jwk-set-uri: ${KEYCLOAK_JWKS_URI}

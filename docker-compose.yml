@@ -56,6 +56,43 @@ services:
     networks:
       - truharvest-network
 
+  # ─────────────────────────────────────────
+  # TruHarvest — Spring Boot backend
+  # Access at: http://localhost:8080
+  # ─────────────────────────────────────────
+  truharvest-app:
+    image: yankurdev/truharvest-backend:latest
+    container_name: truharvest-app
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: app-db
+      DB_PORT: 5432
+      DB_NAME: truharvest
+      DB_USERNAME: truharvest
+      DB_PASSWORD: truharvest123
+      KEYCLOAK_JWKS_URI: http://keycloak:8080/realms/truharvest/protocol/openid-connect/certs
+    depends_on:
+      - app-db
+      - keycloak
+    restart: on-failure
+    networks:
+      - truharvest-network
+
+  # ─────────────────────────────────────────
+  # TruHarvest UI — React/Vite frontend
+  # Access at: http://localhost:3000
+  # ─────────────────────────────────────────
+  truharvest-ui:
+    image: yankurdev/truharvest-ui:latest
+    container_name: truharvest-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - keycloak
+    networks:
+      - truharvest-network
+
 # ─────────────────────────────────────────
 # Named volumes — data saved on your machine disk
 # even if containers are stopped or removed
